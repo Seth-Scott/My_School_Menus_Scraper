@@ -15,11 +15,12 @@ CHROME_DRIVER_PATH = "/Users/sethscott/Documents/python/chromedriver"
 SERVICE = Service(CHROME_DRIVER_PATH)
 
 CURRENT_DAY = datetime.datetime.now().strftime("%d")
+CURRENT_MONTH = datetime.datetime.now().strftime("%m")
+YEAR_MONTH = datetime.datetime.now().strftime("%Y%m")
 ISO_DATE = datetime.datetime.now().strftime("%Y-%m-%d")
 
 
 class Scraper:
-
     def __init__(self):
         self.DRIVER = webdriver.Chrome(service=SERVICE)
         self.DRIVER.get(
@@ -30,6 +31,7 @@ class Scraper:
         self.lunches = [lunch.text for lunch in self.food]
         self.days = [date.text for date in self.dates]
         self.lunch_menu = {self.days[i]: self.lunches[i] for i in range(len(self.lunches))}
+        self.lunch_menu = {YEAR_MONTH: [self.lunch_menu]}
 
     def scrape(self):
         self.DRIVER.quit()
@@ -40,6 +42,6 @@ scraper = Scraper()
 menu = scraper.scrape()
 
 with open('data.json', mode='w') as menu_api:
-    json.dump(menu, menu_api)
+    json.dump(menu, menu_api, indent=4)
 
 print(menu)
