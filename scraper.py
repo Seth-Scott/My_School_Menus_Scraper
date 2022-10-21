@@ -6,6 +6,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 import json
 
+
 CURRENT_DAY = datetime.datetime.now().strftime("%d")
 CURRENT_MONTH = datetime.datetime.now().strftime("%m")
 YEAR_MONTH = datetime.datetime.now().strftime("%Y%m")
@@ -48,7 +49,9 @@ class Scraper:
 scraper = Scraper()
 menu = scraper.scrape()
 
+
 with open('data.json', mode='w') as menu_api:
     json.dump(menu, menu_api, indent=4)
 
 print(menu)
+
