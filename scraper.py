@@ -9,6 +9,7 @@ import json
 INSTANCE = os.getenv("INSTANCE")
 DISTRICT = os.getenv("DISTRICT")
 SCHOOL = os.getenv("SCHOOL")
+# it looks like menu changes between school years?
 MENU = os.getenv("MENU")
 
 CHROME_DRIVER_PATH = "/Users/sethscott/Documents/python/chromedriver"
