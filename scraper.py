@@ -4,6 +4,8 @@ import datetime
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
+
 import json
 
 INSTANCE = os.getenv("INSTANCE")
@@ -23,7 +25,14 @@ ISO_DATE = datetime.datetime.now().strftime("%Y-%m-%d")
 
 class Scraper:
     def __init__(self):
-        self.DRIVER = webdriver.Chrome(service=SERVICE)
+        # below makes chrome run in headless mode, sets an emulated resolution
+        self.chrome_options = Options()
+        self.chrome_options.add_argument("--headless")
+        self.chrome_options.add_argument("--window-size=1920x1080")
+        # remove chrome_options kwarg below to disable headless mode
+        # TODO DeprecationWarning below - "chrome_options" should be "options"
+        self.DRIVER = webdriver.Chrome(service=SERVICE, chrome_options=self.chrome_options)
+
         self.DRIVER.get(
             f"https://www.myschoolmenus.com/instance/{INSTANCE}/district/{DISTRICT}/school/{SCHOOL}/menu/{MENU}")
         self.DRIVER.implicitly_wait(10)
