@@ -1,21 +1,10 @@
-# MAKE SURE ENVIRONMENT VARIABLES ARE LOADED INTO VENV
 import os
 import datetime
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
-
 import json
-
-INSTANCE = os.getenv("INSTANCE")
-DISTRICT = os.getenv("DISTRICT")
-SCHOOL = os.getenv("SCHOOL")
-# it looks like menu changes between school years?
-MENU = os.getenv("MENU")
-
-CHROME_DRIVER_PATH = "/Users/sethscott/Documents/python/chromedriver"
-SERVICE = Service(CHROME_DRIVER_PATH)
 
 CURRENT_DAY = datetime.datetime.now().strftime("%d")
 CURRENT_MONTH = datetime.datetime.now().strftime("%m")
@@ -25,27 +14,35 @@ ISO_DATE = datetime.datetime.now().strftime("%Y-%m-%d")
 
 class Scraper:
     def __init__(self):
+        self.instance = os.getenv("INSTANCE")
+        self.district = os.getenv("DISTRICT")
+        self.school = os.getenv("SCHOOL")
+        # it looks like menu changes between school years?
+        self.menu = os.getenv("MENU")
+
+        self.chrome_driver_path = "./chromedriver"
+        self.service = Service(self.chrome_driver_path)
         # below makes chrome run in headless mode, sets an emulated resolution
         self.chrome_options = Options()
         self.chrome_options.add_argument("--headless")
         self.chrome_options.add_argument("--window-size=1920x1080")
         # remove chrome_options kwarg below to disable headless mode
         # TODO DeprecationWarning below - "chrome_options" should be "options"
-        self.DRIVER = webdriver.Chrome(service=SERVICE, chrome_options=self.chrome_options)
-
-        self.DRIVER.get(
-            f"https://www.myschoolmenus.com/instance/{INSTANCE}/district/{DISTRICT}/school/{SCHOOL}/menu/{MENU}")
-        self.DRIVER.implicitly_wait(10)
-        self.dates = self.DRIVER.find_elements(By.CLASS_NAME, "calendar-day")
-        self.food = self.DRIVER.find_elements(By.CLASS_NAME, "menu-entrees")
-        self.lunches = [lunch.text for lunch in self.food]
-        self.days = [date.text for date in self.dates]
-        self.lunch_menu = {self.days[i]: self.lunches[i] for i in range(len(self.lunches))}
-        self.lunch_menu = {YEAR_MONTH: [self.lunch_menu]}
+        self.driver = webdriver.Chrome(service=self.service, chrome_options=self.chrome_options)
 
     def scrape(self):
-        self.DRIVER.quit()
-        return self.lunch_menu
+        self.driver.get(
+            f"https://www.myschoolmenus.com/instance/{self.instance}/district/{self.district}/school/{self.school}/menu/{self.menu}")
+        self.driver.implicitly_wait(10)
+        dates = self.driver.find_elements(By.CLASS_NAME, "calendar-day")
+        food = self.driver.find_elements(By.CLASS_NAME, "menu-entrees")
+        lunches = [lunch.text for lunch in food]
+        days = [date.text for date in dates]
+        lunch_menu = {days[i]: lunches[i] for i in range(len(lunches))}
+        lunch_menu = {YEAR_MONTH: [lunch_menu]}
+
+        self.driver.quit()
+        return lunch_menu
 
 
 scraper = Scraper()
