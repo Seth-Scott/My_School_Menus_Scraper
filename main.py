@@ -1,5 +1,5 @@
 from scraper import Scraper
-from mttq_integration import MqttClient
+from mqtt_integration import MqttClient
 import json
 
 # make sure environment variables are accessible
@@ -15,10 +15,10 @@ with open('data.json', mode='w') as menu_api:
 
 print(menu)
 
-#  MTQQ integration
-mttq = MqttClient()
+#  MQTT integration
+mqtt = MqttClient()
 
 while True:
-    mttq.post_message('asdfasdfasdfd', 3, 'school/food/lunch')
+    mqtt.post_message('asdfasdfasdfd', 3, 'school/food/lunch')
 
 
