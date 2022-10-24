@@ -17,18 +17,18 @@ class MqttClient:
         # client username and password
         self.mqttClient.username_pw_set(username=self.mqtt_user, password=self.mqtt_passwd)
 
-        # address and port of MTQQ broker
+        # address and port of MQTT broker
         self.mqttClient.connect(self.mqtt_broker, self.mqtt_port)
 
         self.mqttClient.loop_start()
 
     # function called when publish is successful
     def on_publish(self, client, userdata, mid):
-        print("MTTQ client posted a message to broker")
+        print("MQTT client posted a message to broker")
 
-    def post_message(self, mttq_message, mttq_update_interval, topic):
-        # message to be published to the MTTQ broker
-        message = mttq_message
+    def post_message(self, mqtt_message, mqtt_update_interval, topic):
+        # message to be published to the MQTT broker
+        message = mqtt_message
 
         # topic, payload encoded in utf-8,
         info = self.mqttClient.publish(
@@ -44,7 +44,7 @@ class MqttClient:
         # it returns false while he is not aware of delivery that's why calling wait_for_publish() is mandatory.
         info.wait_for_publish()
         print(info.is_published())
-        time.sleep(mttq_update_interval)
+        time.sleep(mqtt_update_interval)
 
         # TODO re-configure configuration.YAML file in HA to be visible as a thing (entity?) in the proper way.
         # TODO figure out how to read the string from the custom MQTT aloud in Google Home
