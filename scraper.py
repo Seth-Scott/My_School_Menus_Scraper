@@ -1,14 +1,11 @@
 import os
-import datetime
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
+from get_dates import GetDates
 
-CURRENT_DAY = datetime.datetime.now().strftime("%d")
-CURRENT_MONTH = datetime.datetime.now().strftime("%m")
-YEAR_MONTH = datetime.datetime.now().strftime("%Y%m")
-ISO_DATE = datetime.datetime.now().strftime("%Y-%m-%d")
+get_date = GetDates()
 
 
 class Scraper:
@@ -29,6 +26,11 @@ class Scraper:
         # TODO DeprecationWarning below - "chrome_options" should be "options"
         self.driver = webdriver.Chrome(service=self.service, chrome_options=self.chrome_options)
 
+        self.current_day = get_date.day
+        self.current_month = get_date.month
+        self.current_year = get_date.year
+        self.iso_date = get_date.iso_date
+
     def scrape(self):
         self.driver.get(
             f"https://www.myschoolmenus.com/instance/{self.instance}/district/{self.district}/school/{self.school}/menu/{self.menu}")
@@ -37,8 +39,9 @@ class Scraper:
         food = self.driver.find_elements(By.CLASS_NAME, "menu-entrees")
         lunches = [lunch.text for lunch in food]
         days = [date.text for date in dates]
-        lunch_menu = {days[i]: lunches[i] for i in range(len(lunches))}
-        lunch_menu = {YEAR_MONTH: [lunch_menu]}
+        #  below creates a faux-ISO date with "i" (in the dictionary comprehension) rather than the hardcoded date
+        lunch_menu = {f"{self.current_year}-{self.current_month}-{days[i]}": lunches[i] for i in range(len(lunches))}
+        lunch_menu = {self.current_year: [lunch_menu]}
 
         self.driver.quit()
         return lunch_menu
