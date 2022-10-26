@@ -37,7 +37,7 @@ class Scraper:
         self.driver.implicitly_wait(10)
         dates = self.driver.find_elements(By.CLASS_NAME, "calendar-day")
         food = self.driver.find_elements(By.CLASS_NAME, "menu-entrees")
-        lunches = [lunch.text for lunch in food]
+        lunches = [lunch.text.replace("Goldkist ", "").replace("Entree\n", "").replace("Vegetables\n", "").replace("Fruit and Vegetable Variety\n", "").replace("Grains\n", "").replace("Milk Choice\n", "").replace("Misc.\n", "").replace("Milk\n", "").replace("\nCondiments", "").replace("\n", " & ") for lunch in food]
         days = [date.text for date in dates]
         #  below creates a faux-ISO date with "i" (in the dictionary comprehension) rather than the hardcoded date
         lunch_menu = {f"{self.current_year}-{self.current_month}-{days[i]}": lunches[i] for i in range(len(lunches))}
