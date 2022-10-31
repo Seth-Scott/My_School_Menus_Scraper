@@ -8,31 +8,38 @@ import pymongo
 # TODO build docker with dependencies (unraid)
 # TODO run api program on cronjob
 
-scraper = Scraper()
-menu = scraper.scrape()
 get_date = GetDates()
+scraper = Scraper()
+
+# menu = scraper.scrape(get_date.tomorrow_iso_date.strftime("%Y-%m"))
+menu = scraper.scrape(get_date.tomorrow_iso_date.strftime("%Y-%m"))
+
+
+print(menu)
 
 # MongoDB integration
 myclient = pymongo.MongoClient("mongodb://192.168.0.16:27017/")
 mongodb_db = myclient["schoolmenu"]
 mongodb_collection = mongodb_db["lunch"]
+
+# TEMPORARY - FOR DEV PRIOR TO DEPLOY
+# mongodb_collection.drop()
+
 # the "upsert" argument prevents already existing items to be added to the database
 for date, food_item in menu.items():
     mongo_format = {"date": date, "lunch": food_item}
     mongodb_collection.update_one(mongo_format, {"$set": mongo_format},
                                   upsert=True)
+for x in mongodb_collection.find():
+    print(x)
 
-# for x in mongodb_collection.find():
-#     print(x)
-
-
+# deprecated
 # with open('data.json', mode='w') as menu_api:
 #     json.dump(menu, menu_api, indent=4)
 
 
 lunch_tomorrow = mongodb_collection.find_one({"date": f"{get_date.tomorrow_iso_date}"})['lunch']
 print(lunch_tomorrow)
-
 
 #  MQTT integration
 mqtt = MqttClient()
