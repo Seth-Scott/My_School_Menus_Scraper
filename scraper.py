@@ -41,7 +41,7 @@ class Scraper:
         days = [date.text for date in dates]
         #  below creates a faux-ISO date with "i" (in the dictionary comprehension) rather than the hardcoded date
         lunch_menu = {f"{self.current_year}-{self.current_month}-{days[i]}": lunches[i] for i in range(len(lunches))}
-        lunch_menu = {self.current_year: [lunch_menu]}
+        # lunch_menu = {self.current_year: [lunch_menu]}
 
         self.driver.quit()
         return lunch_menu
