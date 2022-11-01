@@ -1,24 +1,21 @@
 from scraper import Scraper
-from mqtt_integration import MqttClient
 from get_dates import GetDates
-import json
 import pymongo
+import os
 
 # make sure environment variables are accessible
-# TODO build docker with dependencies (unraid)
-# TODO run api program on cronjob
+# TODO build docker with dependencies
 
 get_date = GetDates()
 scraper = Scraper()
 
-# menu = scraper.scrape(get_date.tomorrow_iso_date.strftime("%Y-%m"))
+mongo_ip = os.getenv("mongo_ip")
+mongo_port = os.getenv("mongo_port")
+
 menu = scraper.scrape(get_date.tomorrow_iso_date.strftime("%Y-%m"))
 
-
-print(menu)
-
 # MongoDB integration
-myclient = pymongo.MongoClient("mongodb://192.168.0.16:27017/")
+myclient = pymongo.MongoClient(f"mongodb://{mongo_ip}:{mongo_port}/")
 mongodb_db = myclient["schoolmenu"]
 mongodb_collection = mongodb_db["lunch"]
 
@@ -33,16 +30,7 @@ for date, food_item in menu.items():
 for x in mongodb_collection.find():
     print(x)
 
-# deprecated
-# with open('data.json', mode='w') as menu_api:
-#     json.dump(menu, menu_api, indent=4)
 
 
-lunch_tomorrow = mongodb_collection.find_one({"date": f"{get_date.tomorrow_iso_date}"})['lunch']
-print(lunch_tomorrow)
 
-#  MQTT integration
-mqtt = MqttClient()
 
-while True:
-    mqtt.post_message(lunch_tomorrow, 3, 'school/food/lunch')
