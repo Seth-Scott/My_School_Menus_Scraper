@@ -3,9 +3,6 @@ from get_dates import GetDates
 import pymongo
 import os
 
-# make sure environment variables are accessible
-# TODO build docker with dependencies
-
 get_date = GetDates()
 scraper = Scraper()
 

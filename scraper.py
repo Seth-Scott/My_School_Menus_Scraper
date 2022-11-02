@@ -1,11 +1,10 @@
 import os
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.options import Options
 from get_dates import GetDates
 
 get_date = GetDates()
+webdriver_address = os.getenv("webdriver_address")
 
 
 class Scraper:
@@ -16,15 +15,14 @@ class Scraper:
         # it looks like menu changes between school years?
         self.menu = os.getenv("MENU")
 
-        self.chrome_driver_path = "./chromedriver"
-        self.service = Service(self.chrome_driver_path)
-        # below makes chrome run in headless mode, sets an emulated resolution
-        self.chrome_options = Options()
-        self.chrome_options.add_argument("--headless")
-        self.chrome_options.add_argument("--window-size=1920x1080")
-        # remove chrome_options kwarg below to disable headless mode
-        # TODO DeprecationWarning below - "chrome_options" should be "options"
-        self.driver = webdriver.Chrome(service=self.service, chrome_options=self.chrome_options)
+        self.options = webdriver.FirefoxOptions()
+        self.options.add_argument('--ignore-ssl-errors=yes')
+        self.options.add_argument('--ignore-certificate-errors')
+
+        self.driver = webdriver.Remote(
+            command_executor=webdriver_address,
+            options=self.options
+        )
 
     def scrape(self, desired_scrape_date):
         self.driver.get(
