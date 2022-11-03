@@ -2,6 +2,7 @@ from scraper import Scraper
 from get_dates import GetDates
 import pymongo
 import os
+import time
 
 get_date = GetDates()
 scraper = Scraper()
@@ -20,12 +21,15 @@ mongodb_collection = mongodb_db["lunch"]
 # mongodb_collection.drop()
 
 # the "upsert" argument prevents already existing items to be added to the database
-for date, food_item in menu.items():
-    mongo_format = {"date": date, "lunch": food_item}
-    mongodb_collection.update_one(mongo_format, {"$set": mongo_format},
-                                  upsert=True)
-for x in mongodb_collection.find():
-    print(x)
+while True:
+    for date, food_item in menu.items():
+        mongo_format = {"date": date, "lunch": food_item}
+        mongodb_collection.update_one(mongo_format, {"$set": mongo_format},
+                                      upsert=True)
+    for x in mongodb_collection.find():
+        print(x)
+    print(f"last checked: {time.time()}")
+    time.sleep(14440)
 
 
 
