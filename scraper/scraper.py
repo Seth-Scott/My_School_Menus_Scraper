@@ -4,7 +4,7 @@ from selenium.webdriver.common.by import By
 from get_dates import GetDates
 
 get_date = GetDates()
-webdriver_address = os.getenv("webdriver_address")
+WEBDRIVER_ADDRESS = os.getenv("WEBDRIVER_ADDRESS")
 
 
 class Scraper:
@@ -20,7 +20,7 @@ class Scraper:
         self.options.add_argument('--ignore-certificate-errors')
 
         self.driver = webdriver.Remote(
-            command_executor=webdriver_address,
+            command_executor=WEBDRIVER_ADDRESS,
             options=self.options
         )
 

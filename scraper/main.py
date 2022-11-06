@@ -4,16 +4,18 @@ import pymongo
 import os
 import time
 
+# TODO increase verbose output
+
 get_date = GetDates()
 scraper = Scraper()
 
-mongo_ip = os.getenv("mongo_ip")
-mongo_port = os.getenv("mongo_port")
+MONGO_IP = os.getenv("MONGO_IP")
+MONGO_PORT = os.getenv("MONGO_PORT")
 
 menu = scraper.scrape(get_date.tomorrow_iso_date.strftime("%Y-%m"))
 
 # MongoDB integration
-myclient = pymongo.MongoClient(f"mongodb://{mongo_ip}:{mongo_port}/")
+myclient = pymongo.MongoClient(f"mongodb://{MONGO_IP}:{MONGO_PORT}/")
 mongodb_db = myclient["schoolmenu"]
 mongodb_collection = mongodb_db["lunch"]
 

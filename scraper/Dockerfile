@@ -1,15 +1,5 @@
 FROM python:3.10
-
-ENV PYTHONUNBUFFERED=1
-
-#ENV INSTANCE=
-#ENV DISTRICT=
-#ENV SCHOOL=
-#ENV MENU=
-#ENV mongo_ip=
-#ENV mongo_port=
-#ENV webdriver_address=
-
+# docker run -d --env-file .env.container -v /etc/localtime:/etc/localtime <docker_image>
 RUN apt update
 
 COPY ./requirements.txt /requirements.txt
