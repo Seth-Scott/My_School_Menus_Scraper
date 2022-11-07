@@ -6,7 +6,7 @@ import os
 class DatabaseIntegration:
     def __init__(self):
         self.mongo_ip = os.getenv("mongo_ip")
-        self.mongo_port = os.getenv("mongo_port")
+        self.mongo_port = int(os.getenv("mongo_port"))
 
         self.get_date = GetDates()
 
