@@ -1,7 +1,10 @@
 import os
+
+import urllib3.exceptions
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from get_dates import GetDates
+import time
 
 get_date = GetDates()
 WEBDRIVER_ADDRESS = os.getenv("WEBDRIVER_ADDRESS")
@@ -19,10 +22,18 @@ class Scraper:
         self.options.add_argument('--ignore-ssl-errors=yes')
         self.options.add_argument('--ignore-certificate-errors')
 
-        self.driver = webdriver.Remote(
-            command_executor=WEBDRIVER_ADDRESS,
-            options=self.options
-        )
+        while True:
+            try:
+                print(f"Connecting to Selenium remote webdriver on {WEBDRIVER_ADDRESS}")
+                self.driver = webdriver.Remote(command_executor=WEBDRIVER_ADDRESS, options=self.options)
+            # TODO exception handling not specific enough
+            except:
+                print("ERROR! It's likely Selenium remote webdriver is not running (yet). Trying again in 10s")
+                time.sleep(10)
+                continue
+            else:
+                print("Successfully connected to Selenium remote webdriver..")
+                break
 
     def scrape(self, desired_scrape_date):
         self.driver.get(

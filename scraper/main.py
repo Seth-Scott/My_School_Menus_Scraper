@@ -1,3 +1,5 @@
+import urllib3.exceptions
+
 from scraper import Scraper
 from get_dates import GetDates
 import pymongo
@@ -24,16 +26,11 @@ mongodb_collection = mongodb_db["lunch"]
 
 # the "upsert" argument prevents already existing items to be added to the database
 while True:
+    print(f"{time.time()}")
     for date, food_item in menu.items():
         mongo_format = {"date": date, "lunch": food_item}
-        mongodb_collection.update_one(mongo_format, {"$set": mongo_format},
-                                      upsert=True)
+        mongodb_collection.update_one(mongo_format, {"$set": mongo_format}, upsert=True)
     for x in mongodb_collection.find():
         print(x)
     print(f"last checked: {time.time()}")
-    time.sleep(14440)
-
-
-
-
-
+    time.sleep(3600)
