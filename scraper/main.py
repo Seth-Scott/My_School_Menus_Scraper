@@ -1,5 +1,3 @@
-import urllib3.exceptions
-
 from scraper import Scraper
 from get_dates import GetDates
 import pymongo

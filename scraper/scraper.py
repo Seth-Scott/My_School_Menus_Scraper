@@ -1,6 +1,4 @@
 import os
-
-import urllib3.exceptions
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from get_dates import GetDates
