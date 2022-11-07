@@ -1,0 +1,31 @@
+services:
+  selenium:
+    image: selenium/standalone-firefox
+    ports:
+      - 4444:4444
+      - 7900:7900
+    healthcheck:
+      test: curl --fail http://127.0.0.1:4444 || exit 1
+      interval: 10s
+      retries: 5
+      start_period: 5s
+      timeout: 10s
+  scraper:
+    build: ./scraper 
+    env_file:
+     - ./scraper/.env.container
+    volumes:
+      - /etc/localtime:/etc/localtime
+    depends_on:
+      - selenium
+    restart: on-failure:15
+  api:
+    build: ./api
+    env_file:
+     - ./api/.env.container
+    volumes:
+      - /etc/localtime:/etc/localtime
+    ports:
+      - 5863:5863
+
+      
