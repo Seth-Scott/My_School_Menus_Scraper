@@ -5,13 +5,13 @@ import os
 
 class DatabaseIntegration:
     def __init__(self):
-        self.mongo_ip = os.getenv("mongo_ip")
-        self.mongo_port = 27017
+        self.mongo_route = os.getenv("MONGO_ROUTE")
 
         self.get_date = GetDates()
 
         # MongoDB integration
-        self.myclient = pymongo.MongoClient(f"mongodb://{self.mongo_ip}:{self.mongo_port}/")
+        self.myclient = pymongo.MongoClient(self.mongo_route)
+
         self.mongodb_db = self.myclient["schoolmenu"]
         self.mongodb_collection = self.mongodb_db["lunch"]
 
