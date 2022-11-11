@@ -18,7 +18,7 @@ services:
       - /etc/localtime:/etc/localtime
     depends_on:
       - selenium
-    restart: on-failure:15
+    restart: always
   api:
     build: ./api
     env_file:
@@ -27,5 +27,6 @@ services:
       - /etc/localtime:/etc/localtime
     ports:
       - 5863:5863
+    restart: always
 
       

@@ -10,7 +10,7 @@ get_date = GetDates()
 scraper = Scraper()
 
 MONGO_IP = os.getenv("MONGO_IP")
-MONGO_PORT = int(os.getenv("MONGO_PORT"))
+MONGO_PORT = 27017
 
 menu = scraper.scrape(get_date.tomorrow_iso_date.strftime("%Y-%m"))
 
