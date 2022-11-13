@@ -4,12 +4,7 @@ services:
     ports:
       - 4444:4444
       - 7900:7900
-    healthcheck:
-      test: curl --fail http://127.0.0.1:4444 || exit 1
-      interval: 10s
-      retries: 5
-      start_period: 5s
-      timeout: 10s
+    restart: always
   scraper:
     build: ./scraper 
     env_file:
